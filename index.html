@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campo Minado</title>
+
+    <style>
+
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        tr td{
+            border: 2px solid black;
+            min-width: 30px;
+            height: 30px;
+
+        }
+        td:hover{
+            background-color: lightgray;
+        }
+
+
+        section{
+            left: 70px;
+
+            position: absolute;
+            z-index: 2;
+            background-color: white;
+
+        }
+        #s2{
+            left: 70px;
+            position: absolute;
+            top: 550px;
+
+            z-index: 1;
+        }
+
+
+        #menu_esquerdo{
+            background-color: chartreuse;
+            width: 60px;
+            height: 100%;
+            position: fixed;
+            z-index: 4;
+        }
+
+    </style>
+
+</head>
+<body>
+    
+    <div id="menu_esquerdo">
+        <img src="bomba.png" alt="">
+        <img src="bandeira.png" alt="">
+    </div>
+
+
+
+    <section id="campo">
+    </section>
+
+    <section id="s2">
+        <p id="bombas_restantes">Quantidade de Bombas restantes: </p>
+        <p id="msg_lis"></p>
+        <p id="msg"></p>
+        <p id="msg_pos"></p>
+        <p id="msgt"></p>
+        <p id="msgt2"></p>
+    </section>
+
+    <script>
+
+        // CONTA DEFINIDA A CADA 500 QUADRINHOS UMA TAXA DE 85 BOMBAS
+
+        var campo = document.getElementById("campo");
+        var msg_lis = document.getElementById("msg_lis");
+        var msg = document.getElementById("msg");
+        var msg_pos = document.getElementById("msg_pos");
+        var msgt = document.getElementById("msgt");
+        var msgt2 = document.getElementById("msgt2");
+        var bombas_restantes = document.getElementById("bombas_restantes");
+
+        // VARIAVEIS
+        var tabuleiro_x = 16; // Tamanho do tabuleiro em x
+        var tabuleiro_y = 16; // Tamanho do tabuleiro em y
+        var comprimento = tabuleiro_x*tabuleiro_y; // Para delimitar os laços, dai faz uma conta so pra todos
+        var x = (tabuleiro_x*tabuleiro_y)*85/500 // Faz a conta das bombas
+        var quantas_bombas = Math.round(x) // Arenodnda
+        lis_divs = []; // Cada um td da tabela é adicionado aqui para identificar o clique mais tarde
+        lis_situacao = []; /* Cada valor é adicionado aqui, bomba, numero ou vazio onde:
+            -1  -> bomba       
+            0   -> vazio
+            1-8 -> numero*/
+
+            var lis_sec=[];
+            primeiro_clique = -1;
+        
+        var controle=0; // Apenas para começar um novo jogo
+        var selecionar=0; // Qual o item na coluna que foi selecionado
+
+
+        function test(aleatorio, pos_primeira){
+            
+            var lis_verificacoes = []
+            
+            //msg.innerHTML += aleatorio+ ", "
+            if (
+             
+             aleatorio == pos_primeira + 1
+            || aleatorio == pos_primeira - 1
+            || aleatorio == pos_primeira + tabuleiro_x
+            || aleatorio == (pos_primeira + tabuleiro_x)+1
+            || aleatorio == (pos_primeira + tabuleiro_x)-1
+            || aleatorio == pos_primeira - tabuleiro_x
+            || aleatorio == (pos_primeira - tabuleiro_x)+1
+            || aleatorio == (pos_primeira - tabuleiro_x)-1){
+                return true
+            }else{
+                return false
+            }
+        }
+
+        var lis_verificacoes = []
+        function laterais(pos_primeira){    
+
+            cont = 0
+            // Esse for cordena as laterais do tabuleiro
+            for (var l =0; l < comprimento; l ++){
+                if(l == pos_primeira){
+                    // Aqui a lista das verificações não verica nada para a esquerda da posição zero
+                    if(cont == 0){
+                        //msg.innerHTML += 'esq, '
+                        lis_verificacoes = [+1, +tabuleiro_x,  +tabuleiro_x+1, +  -tabuleiro_x, -tabuleiro_x+1]
+                    }else{
+                        // Aqui a lista das verificações não verica nada para a direita do comprimento do tabuleiro
+                        if(cont==tabuleiro_x-1){
+                            //msg.innerHTML += 'dir, '
+                            lis_verificacoes = [-1, +tabuleiro_x, +tabuleiro_x-1, -tabuleiro_x, -tabuleiro_x-1]
+                        // Se não cair em nehuma das duas dai é a lista padrão de la de cima    
+                        }else{
+                            lis_verificacoes = [+1, -1, +tabuleiro_x,  +tabuleiro_x+1, + tabuleiro_x-1, -tabuleiro_x, -tabuleiro_x+1, -tabuleiro_x-1]    
+                        }
+                    }
+                }
+                       
+                cont+=1
+                //Delimita o tamanho de cada linha do tabuleiro
+                if(cont==tabuleiro_x){
+                    cont=0
+                }                 
+            }
+        }
+
+        function test2(pos_primeira, valor){
+            if (valor == 2){
+                laterais(pos_primeira)
+                for (var c =0; c < lis_verificacoes.length; c++){
+
+                    t = pos_primeira + lis_verificacoes[c]
+                    //msg.innerHTML += t + ", "
+                    if (t >=0 && t < comprimento){
+                        if (lis_situacao[t] != -1){
+                            lis_situacao[t] += 1
+                        }
+                    }
+                }
+                
+            }else{ 
+                if (valor == 3){
+                    var lis_blocosbrancos =[];
+                    
+                    //msgt2.innerHTML += pos_primeira + ", a ";
+                    if (lis_sec.indexOf(pos_primeira) == -1){
+                        lis_sec.push(pos_primeira);
+                        lis_blocosbrancos.push(pos_primeira);
+                        
+                        while (lis_blocosbrancos.length > 0){
+                            
+                            
+                            laterais(lis_blocosbrancos[0]);
+        
+                           
+                            for (var c =0; c < lis_verificacoes.length; c++){
+                                
+                                
+                                t = lis_blocosbrancos[0] + lis_verificacoes[c];
+                                if (t >=0 && t < comprimento){
+                                //msgt.innerHTML += lis_sec+  ', s|'
+                                if (lis_situacao[t] == 0){
+                                    
+                                    if (lis_sec.indexOf(t) == -1){
+                                        lis_blocosbrancos.push(t);
+                                        lis_sec.push(t);
+                                    }  
+                                    
+                                    //msgt2.innerHTML += lis_blocosbrancos + ", a ";
+                                }
+                                lis_divs[t].innerHTML = lis_situacao[t];
+        
+                            }
+                        }
+                            //msg.innerHTML += lis_blocosbrancos.length+  ', g';
+                            
+                            lis_blocosbrancos.shift();
+                            //msgt2.innerHTML += "<br>";
+                        
+                        }
+                    
+                    }
+                      
+                    //msgt2.innerHTML += lis_blocosbrancos.length + ", b";
+                }
+            }
+        }
+            
+
+
+        // ADICIONAR AS BOMBAS NA LISTA
+        function adicionar_situacao(){
+            var aleatorio=-4;
+            for(var c = 0; c < comprimento; c++){
+                if (c < quantas_bombas){
+                    do{
+                        aleatorio = Math.floor(Math.random() * comprimento);
+                        var ret = test(aleatorio, primeiro_clique)
+                    }while(ret == true || aleatorio == primeiro_clique || lis_situacao[aleatorio] == -1);
+                    lis_situacao[aleatorio] = -1;  
+                }
+
+                //msg.innerHTML += c + ", "
+                if (lis_situacao[c] != -1){
+                    lis_situacao[c] = 0;
+                }
+                
+                
+
+            }
+            for(var c = 0; c < comprimento; c++){
+                
+                
+
+                if (lis_situacao[c] == -1){
+                    //lis_divs[c].style.backgroundColor = "blue"
+                    
+                    test2(c, 2)
+                }
+        
+            } 
+               
+        }
+
+
+
+        // DETECTA OS CLIQUES NO TABULEIRO
+        function clique_campo(){
+            for(var c = 0; c < comprimento; c++){
+                lis_divs[c].addEventListener("click", function () {
+                selecionar = lis_divs.indexOf(this)
+
+                /*if (lis_divs[selecionar].style.backgroundColor == "red"){
+                    lis_divs[selecionar].style.backgroundColor = "white";
+                }else{*/
+                    //lis_divs[selecionar].style.backgroundColor = "red";
+                //}
+
+                // Quando eu detectar o primeiro clique entra a qui
+                if (primeiro_clique == -1){
+                    primeiro_clique = selecionar;
+                    // Auqi então vai para a função adicionar as bombas na lista
+                    adicionar_situacao();
+                    
+                    for(var c = 0; c < comprimento; c++){
+                        msg_lis.innerHTML = lis_situacao
+                        //if (lis_situacao[c] >= 1){
+                            //lis_divs[c].style.backgroundColor = "green"
+                        //}
+                        
+                        //lis_divs[c].innerHTML = lis_situacao[c];   
+                    }  
+                    //test2(selecionar, 3)
+
+                }else{
+                    //Deposi de tudo criado começa as verificaçoes do jogo
+                    if (lis_situacao[selecionar] == 0){
+                        test2(selecionar, 3)
+                    }
+                    lis_divs[selecionar].innerHTML = lis_situacao[selecionar];
+                    
+                    
+                }
+                msg_pos.innerHTML = selecionar +" "+ primeiro_clique;
+                
+                
+                })   
+            }
+        }
+
+
+        /*function limpar(){
+            while(lis_apoio[0] != ''){
+                lis_apoio.pop()
+
+            }
+        }*/
+
+        // COMEÇAR UM NOVO JOGO, AQUI CRIA A TABELA VISÍVEL NO HTML
+        function criar_novo_jogo(){     
+            var x = 0
+            var y = 0
+            var tam_l = 0
+            var tam_t = 30
+
+            // Cria a tabela vazia
+            var tabela = document.createElement("table");
+
+            // Para adicionar colunas e linha na tabela
+            for (var c = 0; c < tabuleiro_y; c++) {
+                // tCria uma linha
+                var tabela_tr = document.createElement("tr");
+
+                for (var i = 0; i < tabuleiro_x; i++) {
+                    
+                    // Cria uma coluna
+                    var tabela_td = document.createElement("td");
+                    
+                    // Lis_divs acumula todos td criados
+                    lis_divs.push(tabela_td)
+                    //Adiciona um texto em cada item
+                    //tabela_td.appendChild(document.createTextNode(i));
+                    // Adiciona o item na coluna
+                    tabela_tr.appendChild(tabela_td);
+                    }
+
+                //Adiciona as colunas na tabela
+                tabela.appendChild(tabela_tr);
+            }
+            // O a sessão no html recebe a tabela
+            campo.appendChild(tabela);
+        }
+        
+
+        //CHAMAR AS FUNÇOES PARA O JOGO FUNCIONAR
+
+        // Atabela visivel e criada apenas uma vez
+        if (controle == 0){
+            criar_novo_jogo()
+            controle = 1;
+        }
+        // Depois ele começa a detectar os clique na tabela
+        clique_campo()
+        //msg.innerHTML = selecionar +" "+ lis_situacao;
+        bombas_restantes.innerHTML = "Quantidade de Bombas restantes:" + quantas_bombas
+  
+
+    </script>
+
+
+</body>
+</html>
