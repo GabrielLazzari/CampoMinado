@@ -1,0 +1,82 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+tr td{
+    border: 2px solid black;
+    min-width: 30px;
+    height: 30px;
+
+}
+td:hover{
+    background-color: lightgray;
+}
+
+#menu_esquerdo{
+    background-color: rgb(130, 255, 0);
+    width: 60px;
+    height: 100%;
+    position: fixed;
+    z-index: 5;
+    float: left;
+    box-shadow: 0 0 20px 3px rgba(0,0,0,0.75);
+    clip-path: inset(0px -40px 0px 0px); /*para a sombra*/
+}
+
+#campo, #configuracoes, #sobre, #dados_jogador{
+    position: absolute;    
+    left: 60px;
+    /*width: calc(100% - 70px);*/
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    display: table;
+    padding: 30px;
+
+}
+#sobre, #configuracoes, #dados_jogador{
+    position: fixed;
+    background-color: rgb(199, 199, 199);
+    box-shadow: 0 0 20px 3px rgba(0,0,0,0.75);
+    clip-path: inset(0px -40px 0px 0px); /*para a sombra*/
+}
+#campo{
+    width: calc(100% - 70px)
+}
+
+.personalizacao{
+
+    margin-bottom: 30px;
+}
+
+
+
+h2{
+    font-size: 25px;
+}
+
+#s2{
+    left: 70px;
+    position: absolute;
+    top: 550px;
+    z-index: 1;
+}
+
+
+.bord{
+    border: 3px solid rgb(8, 112, 8);
+    margin: 10px;
+}
+img{
+    margin: 10px;
+}
+img:hover{
+    position: relative;
+    left: 5px;
+    bottom: 2px;
+    
+}
+#menu{
+    margin-top: 30%;
+}
+
+
