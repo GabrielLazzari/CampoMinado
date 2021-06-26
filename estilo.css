@@ -48,20 +48,6 @@ td:hover{
     margin-bottom: 30px;
 }
 
-
-
-h2{
-    font-size: 25px;
-}
-
-#s2{
-    left: 70px;
-    position: absolute;
-    top: 550px;
-    z-index: 1;
-}
-
-
 .bord{
     border: 3px solid rgb(8, 112, 8);
     margin: 10px;

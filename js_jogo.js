@@ -160,12 +160,20 @@ function adicionar_situacao(){
     }   
 }
 
-
+// DESABILITA O CLIQUE DIREITO NA TABELA PRINCIPAL DO JOGO
+document.getElementById("campo").oncontextmenu = function(){
+return false;
+}
+var direito_ou_esquerdo
+// RETORNA SE FOI CLICADO COM O DIREITO OU ESQUERDO
+function clique_direito(event){
+    direito_ou_esquerdo = event.button
+}
 
 // DETECTA OS CLIQUES NO TABULEIRO
 function clique_campo(){
     for(var c = 0; c < comprimento; c++){
-        lis_divs[c].addEventListener("click", function () {
+        lis_divs[c].addEventListener("mouseup", function () {
         selecionar = lis_divs.indexOf(this)
 
         /*if (lis_divs[selecionar].style.backgroundColor == "red"){
@@ -173,7 +181,6 @@ function clique_campo(){
         }else{*/
             //lis_divs[selecionar].style.backgroundColor = "red";
         //}
-
 
         if (perdeu ==0){
             // Quando eu detectar o primeiro clique entra a qui
@@ -189,7 +196,7 @@ function clique_campo(){
                     
                     //lis_divs[c].innerHTML = lis_situacao[c];   
                 }
-                //Aqui é estitica para no primeiro clique aparecerem já os numero  
+                //Aqui é estética para no primeiro clique aparecerem já os numero  
                 verificacoes_partida(selecionar, 3)
 
                 // PARA A QUANTIDADE DE PARTIDAS JOGADAS
@@ -197,29 +204,39 @@ function clique_campo(){
 
             }else{
                 //Depois de tudo criado começa as verificaçoes do jogo
-
-
                 if (lis_bandeirinhas.indexOf(selecionar) == -1){
-                    if (lis_situacao[selecionar] == 0){
-                        verificacoes_partida(selecionar, 3)
+                    
+                    if (direito_ou_esquerdo == 2){
+                        lis_bandeirinhas.push(selecionar)
+                        lis_divs[selecionar].innerHTML = 't';
+                    }else{
+                        if (direito_ou_esquerdo == 0){
+                            if (lis_situacao[selecionar] == 0){
+                                verificacoes_partida(selecionar, 3)
+                            }
+                            if(lis_situacao[selecionar] == -1){
+                                fim_de_jogo()
+                            }
+                            lis_divs[selecionar].innerHTML = lis_situacao[selecionar];
+                        }
                     }
-                    if(lis_situacao[selecionar] == -1){
-                        fim_de_jogo()
-                    }
-                    lis_divs[selecionar].innerHTML = lis_situacao[selecionar];
 
+                }else{
+                    if(direito_ou_esquerdo == 2){
+                        // Libera novamente para a posição ser clicad, "remove a bandeira"
+                        apaga = lis_bandeirinhas.indexOf(selecionar)
+                        lis_bandeirinhas.splice(apaga, 1)
+                        lis_divs[selecionar].innerHTML = lis_situacao[selecionar];
+                    }
                 }
-
-                
+                            
             }
             msg_pos.innerHTML = selecionar +" "+ primeiro_clique;
             bombas_restantes.innerHTML = quantas_bombas
             
         }
         })   
-    }
-
-    
+    }  
 }
 
 
