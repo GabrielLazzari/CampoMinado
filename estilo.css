@@ -2,11 +2,28 @@
     margin: 0px;
     padding: 0px;
 }
-tr td{
-    border: 2px solid black;
-    min-width: 30px;
-    height: 30px;
+table{
+    border-collapse: collapse;
+}
+td{
+    border: 1px lightgray solid;
+    min-width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 25px;
+}
+.img_peca{
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+    margin: 0px;
+    filter: hue-rotate(0deg);
+    z-index: 1;
+}
 
+.img_peca:hover{
+    left: -5px;
+    bottom: 2px;
 }
 td:hover{
     background-color: lightgray;
@@ -33,11 +50,13 @@ td:hover{
     padding: 30px;
 
 }
+
 #sobre, #configuracoes, #dados_jogador{
     position: fixed;
     background-color: rgb(199, 199, 199);
     box-shadow: 0 0 20px 3px rgba(0,0,0,0.75);
     clip-path: inset(0px -40px 0px 0px); /*para a sombra*/
+    max-width: 310px;
 }
 #campo{
     width: calc(100% - 70px)
@@ -48,9 +67,10 @@ td:hover{
     margin-bottom: 30px;
 }
 
-.bord{
+.informacoes{
     border: 3px solid rgb(8, 112, 8);
     margin: 10px;
+    text-align: center;
 }
 img{
     margin: 10px;
@@ -61,6 +81,7 @@ img:hover{
     bottom: 2px;
     
 }
+
 #menu{
     margin-top: 30%;
 }

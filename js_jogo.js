@@ -3,7 +3,6 @@
 // MENSAGENS DO JOGO
 var campo = document.getElementById("campo");
 var msg = document.getElementById("msg");
-var msg_pos = document.getElementById("msg_posatual");
 var msgt = document.getElementById("msgt");
 var msgt2 = document.getElementById("msgt2");
 var bombas_restantes = document.getElementById("bombas_restantes");
@@ -19,23 +18,49 @@ var lis_situacao = []; /* Cada valor é adicionado aqui, bomba, numero ou vazio 
     0   -> vazio
     1-8 -> numero*/
 var lis_bandeirinhas = [] //Vai armazenando a posição onde o jogador colocar bandeirinha
+var lis_seganhou = [] // quando clicar com o direito em cima de uma bomba adiciona aqui
 var lis_sec=[]; //Ajuda na verificaçao dos espacoes em brancos no clique do jogador
 var primeiro_clique = -1;
 var aleatorio=-4; //Variavel para criar a posição aleatoria das bombas
 
 var controle=0; // Apenas para começar um novo jogo
 var selecionar=0; // Qual o item na coluna que foi selecionado
-var perdeu = 0;
-
+var ganhou_ou_perdeu = 0; //Se ganhou ou perdeu o valor recebe 1
 
 // QUANDO CLICAR EM UMA BOMBA
-function fim_de_jogo(){
-    perdeu = 1
-    window.alert("Você Perdeu")
-    for(var c = 0; c < comprimento; c++){
-        lis_divs[c].innerHTML = lis_situacao[c];   
+// recebe o nome da imagem e a posiçao dela na lis_divs, se for -1 significa que as img estão sendo adicionadas n a hora de gerar a tabela
+function criar_img(nome_imagem, posicao){
+    var criar_img = document.createElement('img')
+    criar_img.setAttribute('src', nome_imagem)
+    criar_img.setAttribute('class', "img_peca")
+    if (posicao != -1){
+        lis_divs[posicao].innerHTML = ''
+        lis_divs[posicao].appendChild(criar_img)
     }
-    partidas_bombaqueexplodiu()
+    return criar_img
+}
+// SE GANHO OU SE PERDE
+function fim_de_jogo(valor, pos_explodiu){
+    ganhou_ou_perdeu = 1;
+    
+    for(var c = 0; c < comprimento; c++){
+        if (lis_situacao[c] == -1){
+            criar_img("imgs/peca_bomba.png", c)
+        }else{
+            lis_divs[c].innerHTML = lis_situacao[c];
+        }
+           
+    }
+
+    if (valor == 0){
+        criar_img("imgs/peca_qexplodiu.png", pos_explodiu)
+        window.alert("Você Perdeu");
+        partidas_bombaqueexplodiu();
+    }else{
+        window.alert("Você ganhou");
+        partidas_queganhou();
+    }
+    
 
 }
 
@@ -73,36 +98,46 @@ function laterais(pos_primeira){
 function verificacoes_partida(pos_primeira, valor){ 
     // Aqui mostra na tela quantidades grandes de vazio conforme o jogador for clicando, qualquer valor que o jogador clicar e for vazio cai nesse if valor == 3
     if (valor == 3){
-            var lis_blocosbrancos =[];
+        var lis_blocosbrancos =[];
+        
+        if (lis_sec.indexOf(pos_primeira) == -1){
+            lis_sec.push(pos_primeira);
+            lis_blocosbrancos.push(pos_primeira);
             
-            if (lis_sec.indexOf(pos_primeira) == -1){
-                lis_sec.push(pos_primeira);
-                lis_blocosbrancos.push(pos_primeira);
-                
-                while (lis_blocosbrancos.length > 0){
-                            
-                    laterais(lis_blocosbrancos[0]);
-            
-                    for (var c =0; c < lis_verificacoes.length; c++){
-                                        
-                        t = lis_blocosbrancos[0] + lis_verificacoes[c];
-                        if (t >=0 && t < comprimento){
+            while (lis_blocosbrancos.length > 0){
+                        
+                laterais(lis_blocosbrancos[0]);
+        
+                for (var c =0; c < lis_verificacoes.length; c++){
+                                    
+                    t = lis_blocosbrancos[0] + lis_verificacoes[c];
+                    if (t >=0 && t < comprimento){
                         if (lis_situacao[t] == 0){
-                            
                             if (lis_sec.indexOf(t) == -1){
                                 lis_blocosbrancos.push(t);
                                 lis_sec.push(t);
                             }  
                             
                         }
+
                         lis_divs[t].innerHTML = lis_situacao[t];
 
-                        }
                     }
-                    
-                    lis_blocosbrancos.shift();
-                }          
+                }
+                
+                lis_blocosbrancos.shift();
+            }          
+        }
+        // ISSO É APENAS ESTÉTICA, COLORIR OS NUMEROS
+        /*for (var r=0; r <comprimento; r++){
+            if (lis_situacao[r] == 0){
+                lis_divs[r].innerHTML = ''
+            }else{
+                if (lis_situacao[r] == 1){
+                    lis_divs[r].style.color = "blue"
+                }
             }
+        }*/
         
     }else{ 
         laterais(pos_primeira)  
@@ -124,9 +159,8 @@ function verificacoes_partida(pos_primeira, valor){
                 }
             }
             // No primeiro clique se nehum deu verdade ele retorna falso, isso quer dizer que nessa posição gerada aleatoria uma bomba(-1) pode ser colocada
-            if (valor == 1){
-                return false
-            }
+            return false
+
         } 
 }
     
@@ -154,7 +188,7 @@ function adicionar_situacao(){
     //Esse for para cada bomba vai levar para o mudulo que coloca os numeros ao redor
     for(var c = 0; c < comprimento; c++){
         if (lis_situacao[c] == -1){
-            lis_divs[c].style.backgroundColor = "blue"
+            //lis_divs[c].style.backgroundColor = "blue"
             verificacoes_partida(c, 2)
         }
     }   
@@ -164,38 +198,35 @@ function adicionar_situacao(){
 document.getElementById("campo").oncontextmenu = function(){
 return false;
 }
+
+// RETORNA SE FOI CLICADO COM O DIREITO(2) OU ESQUERDO(0)
 var direito_ou_esquerdo
-// RETORNA SE FOI CLICADO COM O DIREITO OU ESQUERDO
 function clique_direito(event){
     direito_ou_esquerdo = event.button
 }
 
+// PARA O TEMPO (AINDA N FUNCIONA)
+if ((ganhou_ou_perdeu == 0) && (primeiro_clique != -1)){
+    cronometro()
+}
+
 // DETECTA OS CLIQUES NO TABULEIRO
 function clique_campo(){
+
     for(var c = 0; c < comprimento; c++){
+
         lis_divs[c].addEventListener("mouseup", function () {
         selecionar = lis_divs.indexOf(this)
 
-        /*if (lis_divs[selecionar].style.backgroundColor == "red"){
-            lis_divs[selecionar].style.backgroundColor = "white";
-        }else{*/
-            //lis_divs[selecionar].style.backgroundColor = "red";
-        //}
+        if (ganhou_ou_perdeu == 0){
 
-        if (perdeu ==0){
+
             // Quando eu detectar o primeiro clique entra a qui
             if (primeiro_clique == -1){
                 primeiro_clique = selecionar;
                 // Auqi então vai para a função adicionar as bombas na lista
                 adicionar_situacao();
                 
-                for(var c = 0; c < comprimento; c++){
-                    if (lis_situacao[c] >= 1){
-                        lis_divs[c].style.backgroundColor = "green"
-                    }
-                    
-                    //lis_divs[c].innerHTML = lis_situacao[c];   
-                }
                 //Aqui é estética para no primeiro clique aparecerem já os numero  
                 verificacoes_partida(selecionar, 3)
 
@@ -203,36 +234,53 @@ function clique_campo(){
                 total_partidas() // Função está no dados_jogador.js
 
             }else{
-                //Depois de tudo criado começa as verificaçoes do jogo
+                //Depois de tudo criado começa as verificaçoes do jogo   
                 if (lis_bandeirinhas.indexOf(selecionar) == -1){
                     
                     if (direito_ou_esquerdo == 2){
                         lis_bandeirinhas.push(selecionar)
                         lis_divs[selecionar].innerHTML = 't';
+                        if (lis_situacao[selecionar] == -1){
+                            lis_seganhou.push(selecionar)
+                        }
+                        criar_img("imgs/peca_bandeira.png", selecionar)
+
+
                     }else{
                         if (direito_ou_esquerdo == 0){
+                           lis_divs[selecionar].innerHTML = lis_situacao[selecionar];
                             if (lis_situacao[selecionar] == 0){
                                 verificacoes_partida(selecionar, 3)
                             }
+                            // se clicar em uma bomba perde o jogo
                             if(lis_situacao[selecionar] == -1){
-                                fim_de_jogo()
-                            }
-                            lis_divs[selecionar].innerHTML = lis_situacao[selecionar];
+ 
+                                fim_de_jogo(0, selecionar)
+                            }  
                         }
                     }
 
                 }else{
                     if(direito_ou_esquerdo == 2){
                         // Libera novamente para a posição ser clicad, "remove a bandeira"
-                        apaga = lis_bandeirinhas.indexOf(selecionar)
-                        lis_bandeirinhas.splice(apaga, 1)
-                        lis_divs[selecionar].innerHTML = lis_situacao[selecionar];
+                        criar_img("imgs/peca.png", selecionar)
+                        apaga = lis_bandeirinhas.indexOf(selecionar);
+                        lis_bandeirinhas.splice(apaga, 1);
+                        if (lis_situacao[selecionar] == -1){
+                            apaga2 = lis_seganhou.indexOf(selecionar);
+                            lis_seganhou.splice(apaga2, 1);
+                        }
+                        
+                        //lis_divs[selecionar].innerHTML = lis_situacao[selecionar];
                     }
+                }
+                // Verifica para ganha se apenas as bombas foram marcadas
+                if (((lis_seganhou.length) == quantas_bombas) && (lis_seganhou.length) == (lis_bandeirinhas.length)){
+                    fim_de_jogo(1, -1)
                 }
                             
             }
-            msg_pos.innerHTML = selecionar +" "+ primeiro_clique;
-            bombas_restantes.innerHTML = quantas_bombas
+            bombas_restantes.innerHTML =  quantas_bombas-lis_bandeirinhas.length;
             
         }
         })   
@@ -254,13 +302,12 @@ function criar_campo(){
             
             // Cria uma coluna
             var tabela_td = document.createElement("td");
-            
-            var criar_img = document.createElement('img')
+             
+            tabela_td.appendChild(criar_img("imgs/peca.png", -1))
 
             // Lis_divs acumula todos td criados
             lis_divs.push(tabela_td)
-            //Adiciona um texto em cada item
-            //tabela_td.appendChild(document.createTextNode(i));
+
             // Adiciona o item na coluna
             tabela_tr.appendChild(tabela_td);
             }
@@ -281,14 +328,17 @@ function novo_jogo(){
     quantas_bombas = localStorage.getItem('porcentagem_bombas');
     lis_divs = [];
     lis_situacao = [];
+    lis_seganhou = [];
+    lis_bandeirinhas = [];
     lis_sec=[];
     primeiro_clique = -1;
     selecionar=0;
-    perdeu = 0;
+    ganhou_ou_perdeu = 0;
     campo.innerHTML = '';
+    bombas_restantes.innerHTML = quantas_bombas
+
     iniciar()
 }
-
 
 //CHAMAR AS FUNÇOES PARA O JOGO FUNCIONAR
 // Atabela visivel é criada apenas uma vez e depois ele entra no clique campo para detectar os cliques do jogador
@@ -297,5 +347,7 @@ function iniciar(){
     clique_campo()
 
 }
+bombas_restantes.innerHTML = quantas_bombas
+
 iniciar()
 

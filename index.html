@@ -9,33 +9,30 @@
 
 </head>
 <body>
+
     
     <!--MENU ESQUERDO-->
     <section id="menu_esquerdo">
         <!--Três imagens dos botões-->
         <div id="menu">
-            <img src="imgs/novojogo.png" id="novo_jogo" onclick="novo_jogo()">
-            <img src="imgs/campo.png" id="img_campo" onclick="sobrepor(0)">
-            <img src="imgs/config.png" id="img_confi" onclick="sobrepor(1)">
-            <img src="imgs/sobre.png" id="img_sobre" onclick="sobrepor(2)">
-            <img src="imgs/dados.png" id="img_dados" onclick="sobrepor(3)">
+            <img src="imgs/novojogo.png" id="novo_jogo" class="img_botoes" title="Novo Jogo" onclick="novo_jogo()">
+            <img src="imgs/campo.png" id="img_campo" class="img_botoes" title="Campo do Jogo" onclick="sobrepor(0)">
+            <img src="imgs/config.png" id="img_confi" class="img_botoes" title="Configurações" onclick="sobrepor(1)">
+            <img src="imgs/sobre.png" id="img_sobre" class="img_botoes" title="Sobre o Jogo" onclick="sobrepor(2)">
+            <img src="imgs/dados.png" id="img_dados" class="img_botoes" title="Conquistas" onclick="sobrepor(3)">
         </div>
         <hr>
         <!--Informações da partida-->
-        <div id="informacoes">
-            <img src="imgs/bomba.png">
-            <img src="imgs/bandeira.png">
-            <div class="bord">
+        <div>
+            <div  class="informacoes" title="Bombas Restantes">
                 <p id="bombas_restantes"></p>
             </div>
-            <div class="bord">
-                <p id="msg_posatual">-1</p>
-            </div>
-            <div class="bord">
-                <p id="tempo"></p>
+            <div  class="informacoes" title="Tempo Decorrente">
+                <p id="t_segundos" title="Segundos"></p>
+                <p id="t_minutos" title="Minutos"></p>
+                <p id="t_horas" title="Horas"></p>
             </div>
         </div>
-        <p id="msgt2">a</p>
     </section>
 
     <!--OS TRES BOTÕES ESTÃO EM ORDEM INVERSA PARA POUPAR O Z-INDEX-->
@@ -44,9 +41,8 @@
         <h1>Conquistas</h1>
         <br>
         <p id="p1">Partidas jogadas: 0</p>
-        <p id="p2">Partidadas desistidas: </p>
-        <p id="p3">Partidas ganhas: </p>
-        <p id="p4">Partidas perdidas: 0</p>
+        <p id="p2">Partidas ganhas: </p>
+        <p id="p3">Partidas perdidas: 0</p>
     </section>
     
     <section id="sobre">
@@ -65,45 +61,56 @@
             <p>Quantidade em Y</p>
             <input type="number" id="inputy">
             <button onclick="alterar_tamanho()">Novo Jogo</button>
+            <p>Mude os valores e clique em novo jogo</p>
+            <p>São aceitos valore >=4 e <=400</p>
         </div>
         <hr>
         <div class="personalizacao">
             <h2>Quantidade de Bombas</h2>
-            <input type="radio" id="padrao" name="bombas" value="1" checked onclick="porcent_bombas(0)">
-            <label for="padrao">Padrão: 85 bombas por 500 quadrinhos</label><br>
             
-            <input type="radio" id="personalizado" name="bombas" value="2"
-            onclick="porcent_bombas(1)">
-            <label for="personalizado">Personalizado
-                <input id="digitar_bombas" type="number" placeholder="Digite a quant. de bombas">
-                <button onclick="percent_bombas(1)">Novo Jogo</button>
-            </label><br>
+            <br>
+            <p id="padrao_bombas"></p>
+            <input type="number" id="bombas">&nbsp;
+            <br><button onclick="alterar_bombas()">Novo Jogo</button>
+            <p> >= 1 && tamanho total do tabuleiro - 9</p>
+
         </div>
         <hr>
+        <!--<div class="personalizacao">
+            <h2>Tamnaho da Peça</h2>
+            <input type="radio" id="pequeno" name="tm_peca" value="0" onclick="tam_peca(0)">&nbsp;30x30px
+            &nbsp;
+            <input type="radio" id="pequeno" name="tm_peca" value="1" checked onclick="tam_peca(1)">&nbsp;40x40px  
+            &nbsp;
+            <input type="radio" id="pequeno" name="tm_peca" value="2" onclick="tam_peca(2)">&nbsp;50x50px
+        </div>-->
+        <br>
         <div class="personalizacao">
             <h2>Estilo da Página</h2>
-            <input type="radio" id="c_branco" name="cor_fundo" value="0" checked onclick="mudar_cor(0)">
-            <label for="c_branco">Branco</label><br>
-            
-            <input type="radio" id="c_azul" name="cor_fundo" value="1" onclick="mudar_cor(1)">
-            <label for="c_azul">Azul</label><br>
-            
-            <input type="radio" id="c_verde" name="cor_fundo" value="2"
-            onclick="mudar_cor(2)">
-            <label for="c_verde">Verde</label><br>
+            <input type="radio" id="c_branco" name="cor_fundo" value="0" checked onclick="mudar_cor(0)">&nbsp;Branco
 
+            &nbsp;
+            <input type="radio" id="c_azul" name="cor_fundo" value="1" onclick="mudar_cor(1)">&nbsp;Azul
+
+            &nbsp;
+            <input type="radio" id="c_verde" name="cor_fundo" value="2"
+            onclick="mudar_cor(2)">&nbsp;Verde
+
+            &nbsp;
             <input type="radio" id="c_vermelho" name="cor_fundo" value="3"
-            onclick="mudar_cor(3)">
-            <label for="c_vermelho">Vermelho</label>
+            onclick="mudar_cor(3)">&nbsp;Vermelho
+
+            
         </div>
     </section>
 
     <!--Campo: Onde é gerado o tabuleiro por JS-->
     <section onmousedown="clique_direito(event)" id="campo">
-    <p id="msg">w</p>
+
     </section>
-
-
+    
+<p id="msg">w</p>
+<p id="msgt">t</p>
 
 
     <!--OS CÓDIGOS EXTERNOS-->
