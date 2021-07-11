@@ -1,0 +1,36 @@
+
+Campo Minado
+
+Regras definidas por mim para a construção do jogo baseadas no campo minado do Windows 7
+
+1° ) O primeiro clique do jogador não pode resultar em bomba, então a partir desse clique o mapa será gerado
+
+2°) No primeiro clique no mínimo todos os 8 quadrinhos ao redor do selecionado devem ser abertos.
+
+3°)  A taxa de bombas que eu defini foi: para cada 500 quadrinhos será gerado aleatoriamente 85 bombas
+
+4° ) Cada quadrinho tera uma situação
+            -1 -> Bomba;
+            0 ou ' ' -> vazio;
+            1-8 -> número.
+Que serão colocados na lis_situação
+
+5° ) Optei por colocar tudo em uma única lista e para verificar a situação, ao redor de um quadrinho será aplicado a seguinte conta:
+
+Posição definida é o c		
+	x  x  x     -> menos o tamanho em x da tabela a partir do c, dai mais um e menos um e verifica
+	x  c  x     -> mais um e menos um da posição c e verifica
+	x  x  x     -> mais o tamanho em x da tabela a partir do c, dai mais um e menos um e verifica
+
+
+6°) Mostrar o valor na tela para todos os 8 ao redor de um vazio 
+
+7°) Se ao redor de um vazio for outro vazio todos ao redor daquele outro vazio também serão abertos, assim até que haja vazios ocorrerá um efeito dominó
+
+8°) Se for um número ao redor de um vazio apenas mostrara o número
+
+
+Testes
+
+Geração 200x200 em 10s
+Geração 300x300 em  19s

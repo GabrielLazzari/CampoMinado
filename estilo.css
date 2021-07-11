@@ -11,19 +11,22 @@ td{
     height: 40px;
     text-align: center;
     font-size: 25px;
+    background-color: rgb(241, 239, 234);
+    font-weight: 100;
 }
+
 .img_peca{
     width: 40px;
     height: 40px;
     padding: 0px;
     margin: 0px;
-    filter: hue-rotate(0deg);
     z-index: 1;
 }
 
+/*Imagem das pecas do tabuleiro*/
 .img_peca:hover{
-    left: -5px;
-    bottom: 2px;
+    left: -4px;
+    bottom: 1px;
 }
 td:hover{
     background-color: lightgray;
@@ -40,30 +43,34 @@ td:hover{
     clip-path: inset(0px -40px 0px 0px); /*para a sombra*/
 }
 
-#campo, #configuracoes, #sobre, #dados_jogador{
+
+#campo, #configuracoes, #sobre, #dados_jogador, #regras_definidas{
     position: absolute;    
     left: 60px;
-    /*width: calc(100% - 70px);*/
-    height: 100%;
     background-color: rgb(255, 255, 255);
     display: table;
     padding: 30px;
-
+    overflow: scroll;
 }
 
-#sobre, #configuracoes, #dados_jogador{
-    position: fixed;
+
+#sobre, #configuracoes, #dados_jogador, #regras_definidas{
     background-color: rgb(199, 199, 199);
     box-shadow: 0 0 20px 3px rgba(0,0,0,0.75);
     clip-path: inset(0px -40px 0px 0px); /*para a sombra*/
-    max-width: 310px;
+    max-width: 350px;
 }
+
+
 #campo{
-    width: calc(100% - 70px)
+    width: calc(100% - 120px)
+}
+
+#regras_definidas{
+    max-width: 500px;
 }
 
 .personalizacao{
-
     margin-bottom: 30px;
 }
 
@@ -72,6 +79,7 @@ td:hover{
     margin: 10px;
     text-align: center;
 }
+/*Imagens dos menus*/
 img{
     margin: 10px;
 }
@@ -79,7 +87,6 @@ img:hover{
     position: relative;
     left: 5px;
     bottom: 2px;
-    
 }
 
 #menu{

@@ -1,21 +1,20 @@
 
-// PARA O TAMANHO DO TABULEIRO
 
+// PARA O TAMANHO DO TABULEIRO
 var posx = document.getElementById("inputx");
 var posy = document.getElementById("inputy");
-
 function alterar_tamanho(){
-
+    
     if (posx.value != "" && posy.value != ""){
         if ((posx.value >= 4 && posx.value <= 400) && (posy.value >= 4 && posy.value <= 400)){
-            localStorage.setItem('posicaoX', posx.value)
-            localStorage.setItem('posicaoY', posy.value)
+            localStorage.setItem('tamX', posx.value)
+            localStorage.setItem('tamY', posy.value)
             localStorage.setItem('porcentagem_bombas', Math.round((posx.value*posy.value)*85/500))
             // Atualizar na tela as bombas
             mostrar_bombas()
             // leva pra um novo jogo
             novo_jogo()
-            // Tira as configuraçoes da tela
+            // Tira a div das configuraçoes da tela 
             clicar_corpo()
             
         } 
@@ -26,14 +25,14 @@ function alterar_tamanho(){
 }
 
 function tam_tabuleiro(){
-    if (localStorage.getItem('posicaoX') == null){
-        localStorage.setItem('posicaoX', "6")
+    if (localStorage.getItem('tamX') == null){
+        localStorage.setItem('tamX', "20")
     }
-    if (localStorage.getItem('posicaoY') == null){
-        localStorage.setItem('posicaoY', "6")
+    if (localStorage.getItem('tamY') == null){
+        localStorage.setItem('tamY', "10")
     }
-    document.getElementById("inputx").value=localStorage.getItem('posicaoX');
-    document.getElementById("inputy").value=localStorage.getItem('posicaoY');
+    document.getElementById("inputx").value=localStorage.getItem('tamX');
+    document.getElementById("inputy").value=localStorage.getItem('tamY');
 }
 
 tam_tabuleiro()
@@ -41,14 +40,13 @@ tam_tabuleiro()
 
 
 // PARA A GERAÇÃO DE BOMBAS
-
 var padrao = document.getElementById('bombas');
-v1 = localStorage.getItem('posicaoX');
-v2 = localStorage.getItem('posicaoY');
+v1 = localStorage.getItem('tamX');
+v2 = localStorage.getItem('tamY');
 
 function mostrar_bombas(){
-    v1 = localStorage.getItem('posicaoX');
-    v2 = localStorage.getItem('posicaoY');
+    v1 = localStorage.getItem('tamX');
+    v2 = localStorage.getItem('tamY');
     document.getElementById("padrao_bombas").innerHTML = "Padrão: " + 
     (Math.round((v1*v2)*85/500)) + " bombas para " + v1+"x"+v2;
 
@@ -80,8 +78,52 @@ function porcent_bombas(){
     mostrar_bombas()
 }
 
-
 porcent_bombas()
+
+
+
+//PARA A COR DO TABULEIRO
+
+var cor_tabuleiro = document.getElementById('cor_tabuleiro');
+
+function cor_do_tabuleiro(sepagina){
+    
+    if (localStorage.getItem('cor_tabuleiro') == null){
+        localStorage.setItem('cor_tabuleiro', "0");
+    }else{
+        if (cor_tabuleiro.value != ''){
+            localStorage.setItem('cor_tabuleiro', cor_tabuleiro.value);
+            
+        }
+    }
+    
+    cor_tabuleiro.value=localStorage.getItem('cor_tabuleiro');
+    //So entra aqui quando não tiver carregando a pagina pela primeira vez
+    if (sepagina == 1){
+        novo_jogo()
+        clicar_corpo()
+    }
+
+    
+    
+    
+}
+
+cor_do_tabuleiro(0)
+
+
+
+//PARA AS CORES DOS NUMEROS
+var numeros_coloridos = document.getElementById("numeros_coloridos");
+var numeros_semcor = document.getElementById("numeros_semcor");
+
+function cor_dos_numeros(valor){
+    //Se valor for 1 é colorido senao preto
+    // Esse colorir_numeros é uma verificação antes do switch no jogo principal
+    colorir_numeros = valor
+    clicar_corpo()
+
+}
 
 
 
@@ -89,20 +131,20 @@ porcent_bombas()
 
 var campo = document.getElementById("campo");
 var confi = document.getElementById("configuracoes");
+var regras_definidas = document.getElementById("regras_definidas");
+var dados = document.getElementById("dados_jogador");
 var sobre = document.getElementById("sobre");
 
 // Branco, Azul, Verde, Vermelho
 tom1 = ['white', 'rgb(0, 140, 245)', 'rgb(0, 255, 60)', 'rgb(255, 70, 0)'];
 tom2 = ["rgb(199, 199, 199)", "rgb(0, 60, 255)", "rgb(0, 190, 60)", "rgb(255, 0, 0)"]
 
-function mudar_cor(valor){
+function mudar_cor_fundo(valor){
     document.body.style.backgroundColor = tom1[valor];
     campo.style.backgroundColor = tom1[valor];
     confi.style.backgroundColor = tom2[valor];
+    regras_definidas.style.backgroundColor = tom2[valor];
+    dados.style.backgroundColor = tom2[valor];
     sobre.style.backgroundColor = tom2[valor];
 
 }
-
-
-
-

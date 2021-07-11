@@ -13,13 +13,15 @@
     
     <!--MENU ESQUERDO-->
     <section id="menu_esquerdo">
+        
         <!--Três imagens dos botões-->
         <div id="menu">
             <img src="imgs/novojogo.png" id="novo_jogo" class="img_botoes" title="Novo Jogo" onclick="novo_jogo()">
             <img src="imgs/campo.png" id="img_campo" class="img_botoes" title="Campo do Jogo" onclick="sobrepor(0)">
             <img src="imgs/config.png" id="img_confi" class="img_botoes" title="Configurações" onclick="sobrepor(1)">
-            <img src="imgs/sobre.png" id="img_sobre" class="img_botoes" title="Sobre o Jogo" onclick="sobrepor(2)">
+            <img src="imgs/regras_definidas.png" id="img_regras_definidas.png" class="img_botoes" title="Sobre o Jogo" onclick="sobrepor(2)">
             <img src="imgs/dados.png" id="img_dados" class="img_botoes" title="Conquistas" onclick="sobrepor(3)">
+            <img src="imgs/sobre.png" id="img_sobre" class="img_botoes" title="Sobre o Desenvolvimento" onclick="sobrepor(4)">
         </div>
         <hr>
         <!--Informações da partida-->
@@ -35,82 +37,160 @@
         </div>
     </section>
 
+
+
     <!--OS TRES BOTÕES ESTÃO EM ORDEM INVERSA PARA POUPAR O Z-INDEX-->
-    <!--Sobre: informações sobre o jogo-->
+    <!--Botão Sobre: informações sobre o o desenvolvimento do jogo-->
+    <section id="sobre">
+        <p>Campo Minado</p>
+        <p>Desenvolvido por: Gabriel C. Lazzari</p>
+        <p>Disciplina de Programação Web</p>
+        <p>Projeto coordenado pelo professor Juliano P. Menzen</p>
+        <br>
+        <p>Data de início: 11/6/2021</p>
+        <p>Data de conclusão: 10/7/2021</p>
+    </section>
+    
+
+
+    <!--Botão Conquistas: informações das partidas jogadas-->
     <section id="dados_jogador">
         <h1>Conquistas</h1>
         <br>
-        <p id="p1">Partidas jogadas: 0</p>
-        <p id="p2">Partidas ganhas: </p>
-        <p id="p3">Partidas perdidas: 0</p>
+        <p id="partidas_jogadas">Partidas jogadas: 0</p>
+        <p id="partidas_ganhas">Partidas ganhas: </p>
+        <p id="partidas_perdidas">Partidas perdidas: 0</p>
     </section>
     
-    <section id="sobre">
+
+
+    <!--Botão Sobre: informações sobre as regras colocadas no jogo-->
+    <section id="regras_definidas">
         <h1>Campo Minado</h1>
+        <br>
         <p>Regras definidas por mim para a construção do jogo baseadas no campo minado do Windows 7</p>
+
+        <br>
+        <p>1° ) O primeiro clique do jogador não pode resultar em bomba, então a partir desse clique o mapa será gerado</p>
+
+        <br>
+        <p>2°) No primeiro clique no mínimo todos os 8 quadrinhos ao redor do selecionado devem ser abertos.</p>
+
+        <br>
+        <p>3°)  A taxa de bombas que eu defini foi: para cada 500 quadrinhos será gerado aleatoriamente 85 bombas</p>
+        
+        <br>
+        <p>4° ) Cada quadrinho tera uma situação
+            -1 -> Bomba;
+            0 ou ' ' -> vazio;
+            1-8 -> número.
+            Que serão colocados na lis_situação</p>
+
+        <br>
+        <p>5° ) Optei por colocar tudo em uma única lista e para verificar a situação, ao redor de um quadrinho será aplicado uma conta de somar e diminuir posições</p>
+        
+        <br>
+        <p>6°) Mostrar o valor na tela para todos os 8 ao redor de um vazio</p>
+        
+        <br>
+        <p>7°) Se ao redor de um vazio for outro vazio todos ao redor daquele outro vazio também serão abertos, assim até que haja vazios ocorrerá um efeito dominó
+        </p>
+
+        <br>
+        <p>8°) Se for um número ao redor de um vazio apenas mostrara o número</p>
     </section>
+
+
 
     <!--Configurações: Personalização da partida-->
     <section id="configuracoes">
-        <h1>Configurações</h1><br>
+        <h1>Configurações</h1>
+        <p style="font-size: 15px;">Obs: Para aplica-las um novo jogo deve ser iniciado</p><br>
         <div class="personalizacao">
             <h2>Tamanho do Tabuleiro</h2>
-            <p>Qantidade em X</p>
+            <p>Quantidade em X</p>
             <input type="number" id="inputx"><br>
             
             <p>Quantidade em Y</p>
             <input type="number" id="inputy">
             <button onclick="alterar_tamanho()">Novo Jogo</button>
             <p>Mude os valores e clique em novo jogo</p>
-            <p>São aceitos valore >=4 e <=400</p>
+            <p>São aceitos valores >=4 e <=400</p>
         </div>
+        <br>
         <hr>
         <div class="personalizacao">
             <h2>Quantidade de Bombas</h2>
-            
             <br>
             <p id="padrao_bombas"></p>
-            <input type="number" id="bombas">&nbsp;
-            <br><button onclick="alterar_bombas()">Novo Jogo</button>
-            <p> >= 1 && tamanho total do tabuleiro - 9</p>
+            <input type="number" id="bombas">
+            <button onclick="alterar_bombas()">Novo Jogo</button>
+            &nbsp;
+            <p> >= 1 e tamanho total do tabuleiro - 9</p>
 
         </div>
-        <hr>
+        
+        <!--NÃO FOI DESSA VEZ QUEM SABE NO FUTURO-->
         <!--<div class="personalizacao">
-            <h2>Tamnaho da Peça</h2>
+            <h2>Tamanho da Peça</h2>
             <input type="radio" id="pequeno" name="tm_peca" value="0" onclick="tam_peca(0)">&nbsp;30x30px
             &nbsp;
             <input type="radio" id="pequeno" name="tm_peca" value="1" checked onclick="tam_peca(1)">&nbsp;40x40px  
             &nbsp;
             <input type="radio" id="pequeno" name="tm_peca" value="2" onclick="tam_peca(2)">&nbsp;50x50px
         </div>-->
+
         <br>
+        <hr>
         <div class="personalizacao">
-            <h2>Estilo da Página</h2>
-            <input type="radio" id="c_branco" name="cor_fundo" value="0" checked onclick="mudar_cor(0)">&nbsp;Branco
+            <h2>Cor do Tabuleiro</h2>
+            <br>
+            <p id="padrao_bombas"></p>
+            <input type="number" id="cor_tabuleiro" maxlength="10">
+            <button onclick="cor_do_tabuleiro(1)">Novo Jogo</button>
+            &nbsp;
+            <p> Digite um número de 0 até com 10 caracteres e se divirta descobrindo as cores</p>
+            
+            
+        </div>
+
+        <br>
+        <hr>
+        <div class="personalizacao">
+            <h2>Cor dos Números</h2>
+            <input type="radio" id="numeros_coloridos" name="cor_numeros" value="0" checked onclick="cor_dos_numeros(1)">&nbsp;Números Coloridos
 
             &nbsp;
-            <input type="radio" id="c_azul" name="cor_fundo" value="1" onclick="mudar_cor(1)">&nbsp;Azul
+            <input type="radio" id="numeros_semcor" name="cor_numeros" value="1" onclick="cor_dos_numeros(0)">&nbsp;Números em preto
+        </div>
+        
+        <br><br>
+        <hr>
+        <div class="personalizacao">
+            <h2>Estilo da Página</h2>
+            <input type="radio" id="c_branco" name="cor_fundo" value="0" checked onclick="mudar_cor_fundo(0)">&nbsp;Branco
+
+            &nbsp;
+            <input type="radio" id="c_azul" name="cor_fundo" value="1" onclick="mudar_cor_fundo(1)">&nbsp;Azul
 
             &nbsp;
             <input type="radio" id="c_verde" name="cor_fundo" value="2"
-            onclick="mudar_cor(2)">&nbsp;Verde
+            onclick="mudar_cor_fundo(2)">&nbsp;Verde
 
             &nbsp;
             <input type="radio" id="c_vermelho" name="cor_fundo" value="3"
-            onclick="mudar_cor(3)">&nbsp;Vermelho
+            onclick="mudar_cor_fundo(3)">&nbsp;Vermelho
 
-            
         </div>
     </section>
+
+
 
     <!--Campo: Onde é gerado o tabuleiro por JS-->
     <section onmousedown="clique_direito(event)" id="campo">
 
     </section>
-    
-<p id="msg">w</p>
-<p id="msgt">t</p>
+       
 
 
     <!--OS CÓDIGOS EXTERNOS-->
